@@ -1,11 +1,13 @@
 const productService = require("../services/productService");
 
+// Listar produtos
 function listarProdutos(req, res) {
   const produtos = productService.listarProdutos();
 
   res.json(produtos);
 }
 
+// Buscar produto por ID
 function buscarProdutoPorId(req, res) {
   const id = Number(req.params.id);
 
@@ -13,31 +15,32 @@ function buscarProdutoPorId(req, res) {
 
   if (!produto) {
     return res.status(404).json({
-      erro: "Produto não encontrado."
+      erro: "Produto não encontrado.",
     });
   }
 
   res.json(produto);
 }
 
+// Criar produto
 function criarProduto(req, res) {
   const { nome, preco, categoria, estoque } = req.body;
 
   if (!nome || !preco || !categoria || estoque === undefined) {
     return res.status(400).json({
-      erro: "Nome, preço, categoria e estoque são obrigatórios."
+      erro: "Nome, preço, categoria e estoque são obrigatórios.",
     });
   }
 
   if (preco <= 0) {
     return res.status(400).json({
-      erro: "O preço deve ser maior que zero."
+      erro: "O preço deve ser maior que zero.",
     });
   }
 
   if (estoque < 0) {
     return res.status(400).json({
-      erro: "O estoque não pode ser negativo."
+      erro: "O estoque não pode ser negativo.",
     });
   }
 
@@ -45,31 +48,32 @@ function criarProduto(req, res) {
     nome,
     preco,
     categoria,
-    estoque
+    estoque,
   });
 
   res.status(201).json(novoProduto);
 }
 
+// Atualizar produto
 function atualizarProduto(req, res) {
   const id = Number(req.params.id);
   const { nome, preco, categoria, estoque } = req.body;
 
   if (!nome || !preco || !categoria || estoque === undefined) {
     return res.status(400).json({
-      erro: "Nome, preço, categoria e estoque são obrigatórios."
+      erro: "Nome, preço, categoria e estoque são obrigatórios.",
     });
   }
 
   if (preco <= 0) {
     return res.status(400).json({
-      erro: "O preço deve ser maior que zero."
+      erro: "O preço deve ser maior que zero.",
     });
   }
 
   if (estoque < 0) {
     return res.status(400).json({
-      erro: "O estoque não pode ser negativo."
+      erro: "O estoque não pode ser negativo.",
     });
   }
 
@@ -77,18 +81,19 @@ function atualizarProduto(req, res) {
     nome,
     preco,
     categoria,
-    estoque
+    estoque,
   });
 
   if (!produtoAtualizado) {
     return res.status(404).json({
-      erro: "Produto não encontrado."
+      erro: "Produto não encontrado.",
     });
   }
 
   res.json(produtoAtualizado);
 }
 
+// Deletar produto
 function deletarProduto(req, res) {
   const id = Number(req.params.id);
 
@@ -96,12 +101,12 @@ function deletarProduto(req, res) {
 
   if (!deletado) {
     return res.status(404).json({
-      erro: "Produto não encontrado."
+      erro: "Produto não encontrado.",
     });
   }
 
   res.json({
-    mensagem: "Produto deletado com sucesso."
+    mensagem: "Produto deletado com sucesso.",
   });
 }
 
@@ -110,5 +115,5 @@ module.exports = {
   buscarProdutoPorId,
   criarProduto,
   atualizarProduto,
-  deletarProduto
+  deletarProduto,
 };
