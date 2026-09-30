@@ -20,7 +20,7 @@ async function criarProduto(dados) {
 
 async function atualizarProduto(id, dados) {
   const produtoAtualizado = await Product.findByIdAndUpdate(id, dados, {
-    new: true
+    new: true,
   });
 
   return produtoAtualizado;
@@ -37,5 +37,5 @@ module.exports = {
   buscarProdutoPorId,
   criarProduto,
   atualizarProduto,
-  deletarProduto
+  deletarProduto,
 };
