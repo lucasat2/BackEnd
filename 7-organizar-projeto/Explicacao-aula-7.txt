@@ -1,0 +1,22 @@
+RESUMO: ORGANIZAÇÃO PROFISSIONAL DO PROJETO
+
+Passo 1: Instalação e Configuração Inicial
+Abra o terminal na pasta do projeto e execute npm init -y. Em seguida, instale a biblioteca Express executando npm install express. Abra o arquivo package.json e adicione o comando de atalho dentro da seção "scripts" escrevendo "dev": "node src/server.js". Para iniciar o servidor a partir de agora, execute no terminal npm run dev.
+
+Passo 2: O Problema
+Colocar todo o código no arquivo principal (server.js) dificulta a leitura, a manutenção e o trabalho em equipe à medida que o projeto cresce.
+
+Passo 3: A Solução (Camadas)
+A solução é separar o código em três partes principais, cada uma com uma responsabilidade única: Routes, Controllers e Services.
+
+Passo 4: Routes (Rotas)
+Ficam na pasta routes. Elas definem os endereços da API, como por exemplo /produtos. Não contêm lógica, apenas conectam o endereço digitado ao Controller correspondente.
+
+Passo 5: Controllers (Controladores)
+Ficam na pasta controllers. Eles lidam diretamente com a comunicação recebendo a requisição e enviando a resposta. Recebem os dados do usuário, chamam o Service e devolvem a resposta final com o código de status.
+
+Passo 6: Services (Serviços)
+Ficam na pasta services. Eles contêm as regras de negócio e manipulam a lista de dados para criar, buscar, atualizar e deletar. O Service não faz ideia do que é uma requisição ou resposta.
+
+Passo 7: Estrutura Limpa
+O arquivo server.js passa a ser apenas o ponto de partida do servidor. Ele cuida apenas de iniciar o Express, habilitar o formato JSON e carregar o arquivo de rotas.
