@@ -4,6 +4,7 @@ const express = require("express");
 
 const connectDatabase = require("./config/database");
 const productRoutes = require("./routes/productRoutes");
+const studentRoutes = require("./routes/studentRoutes");
 const logger = require("./middlewares/loggerMiddleware");
 const errorHandler = require("./middlewares/errorMiddleware");
 
@@ -15,6 +16,7 @@ app.use(express.json());
 app.use(logger);
 
 app.use(productRoutes);
+app.use(studentRoutes);
 
 const Product = require("./models/Product");
 

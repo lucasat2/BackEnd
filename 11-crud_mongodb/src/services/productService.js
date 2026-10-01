@@ -1,7 +1,7 @@
 const Product = require("../models/Product");
 
 async function listarProdutos() {
-  const produtos = await Product.find();
+  const produtos = await Product.find();  // CRUD
 
   return produtos;
 }
