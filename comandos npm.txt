@@ -1,6 +1,0 @@
-npm init -y
-npm install express
-npm install bcrypt
-npm install jsonwebtoken
-npm install nodemon -D
-npm run dev
