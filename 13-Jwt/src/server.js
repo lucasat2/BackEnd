@@ -2,9 +2,10 @@ require("dotenv").config();
 
 const express = require("express");
 
-const userRoutes = require("./routes/userRoutes");
 const connectDatabase = require("./config/database");
 const productRoutes = require("./routes/productRoutes");
+const userRoutes = require("./routes/userRoutes");
+const authRoutes = require("./routes/authRoutes");
 const logger = require("./middlewares/loggerMiddleware");
 const errorHandler = require("./middlewares/errorMiddleware");
 
@@ -17,12 +18,11 @@ app.use(logger);
 
 app.use(productRoutes);
 app.use(userRoutes);
-
-const Product = require("./models/Product");
+app.use(authRoutes);
 
 app.use((req, res) => {
   res.status(404).json({
-    erro: "Rota não encontrada.",
+    erro: "Rota não encontrada."
   });
 });
 
