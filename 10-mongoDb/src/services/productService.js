@@ -1,82 +1,46 @@
-let produtos = [
-  {
-    id: 1,
-    nome: "Mouse Gamer",
-    preco: 120,
-    categoria: "Informática",
-    estoque: 10
-  },
-  {
-    id: 2,
-    nome: "Teclado Mecânico",
-    preco: 250,
-    categoria: "Informática",
-    estoque: 5
-  },
-  {
-    id: 3,
-    nome: "Cadeira Gamer",
-    preco: 900,
-    categoria: "Móveis",
-    estoque: 2
-  }
-];
+const Product = require("../models/Product");
 
-function listarProdutos() {
+//CREATE 
+
+async function criarProduto(dados){
+  const novoProduto = await Product.create(dados);
+  return novoProduto;
+
+}
+
+// READ
+async function listarProdutos(){
+  const produtos = await Product.find();
   return produtos;
 }
 
-function buscarProdutoPorId(id) {
-  return produtos.find((produto) => produto.id === id);
-}
+//READ POR ID 
 
-function criarProduto(dados) {
-  const { nome, preco, categoria, estoque } = dados;
-
-  const novoProduto = {
-    id: produtos.length + 1,
-    nome,
-    preco,
-    categoria,
-    estoque
-  };
-
-  produtos.push(novoProduto);
-
-  return novoProduto;
-}
-
-function atualizarProduto(id, dados) {
-  const produto = buscarProdutoPorId(id);
-
-  if (!produto) {
-    return null;
-  }
-
-  produto.nome = dados.nome;
-  produto.preco = dados.preco;
-  produto.categoria = dados.categoria;
-  produto.estoque = dados.estoque;
-
+async function buscarProdutoPorId(){
+  const produto = await Product.findById();
   return produto;
 }
 
-function deletarProduto(id) {
-  const produtoExiste = produtos.some((produto) => produto.id === id);
+//UPDATE 
 
-  if (!produtoExiste) {
-    return false;
-  }
+async function atualizarProduto(id,dados){
+  const produtoAtualizado = await Product.findByIdAndUpdate(id,dados, {new: true});
+  return produtoAtualizado;
+}
 
-  produtos = produtos.filter((produto) => produto.id !== id);
+// DELETE
 
-  return true;
+async function deletarProduto(id){
+    const produtoDeletado = await Product.findByIdAndDelete(id);
+    return produtoDeletado;
 }
 
 module.exports = {
+  criarProduto,
   listarProdutos,
   buscarProdutoPorId,
-  criarProduto,
   atualizarProduto,
   deletarProduto
-};
+}
+
+
