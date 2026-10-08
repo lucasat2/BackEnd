@@ -1,2 +1,0 @@
-PORT=3000 
-MONGO_URL=mongodb+srv://lucasat2:WkmyxIS3vSOpd0b6@api-store.reoni4j.mongodb.net/api-store?appName=api-store

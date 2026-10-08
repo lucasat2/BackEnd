@@ -7,6 +7,8 @@ const productRoutes = require("./routes/productRoutes");
 const logger = require("./middlewares/loggerMiddleware");
 const errorHandler = require("./middlewares/errorMiddleware");
 
+
+
 const app = express();
 
 connectDatabase();
