@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const productService = require("../services/productService");
-const{productSchema} = require("../validations/productValidation");
+const { productSchema } = require("../validations/productValidation");
 
 function isValidObjectId(id) {
     return mongoose.Types.ObjectId.isValid(id);
@@ -8,7 +8,34 @@ function isValidObjectId(id) {
 
 async function listarProdutos(req, res, next) {
     try {
-        const produtos = await productService.listarProdutos();
+        const { categoria, search, page, limit } = req.query;
+      
+           if(page && Number(page) < 1) { 
+            return res.status(400).json({
+                erro: "A página deve ser maior ou igual a 1 "
+            });
+           }  
+
+           if(limit && Number(limit) < 1) { 
+            return res.status(400).json({
+                erro: "O limite de ser maior ou igual a 1"
+            });
+           }
+
+           if(limit && Number(limit)> 100) {
+            return res.status(400).json({
+                erro: " O limite máximo permitido é 100"
+            });
+           }
+
+        const produtos = await productService.listarProdutos(
+            {
+                categoria,
+                search,
+                page,
+                limit
+            }
+        );
 
         res.json(produtos);
     } catch (error) {
@@ -45,7 +72,7 @@ async function criarProduto(req, res, next) {
 
         const resultado = productSchema.safeParse(req.body)
 
-        if(!resultado.success){
+        if (!resultado.success) {
             return res.status(400).json({
                 erro: resultado.error.erros[0].message
             });
@@ -68,14 +95,14 @@ async function atualizarProduto(req, res, next) {
                 erro: "ID inválido."
             });
         }
-          const resultado = productSchema.safeParse(req.body);
+        const resultado = productSchema.safeParse(req.body);
 
-           if(!resultado.success){
+        if (!resultado.success) {
             return res.status(400).json({
                 erro: resultado.error.erros[0].message
             });
         }
-        const produtoAtualizado = await productService.atualizarProduto(id,resultado.data);
+        const produtoAtualizado = await productService.atualizarProduto(id, resultado.data);
 
         if (!produtoAtualizado) {
             return res.status(404).json({
