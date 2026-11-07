@@ -1,5 +1,7 @@
 const mongoose = require("mongoose");
 const productService = require("../services/productService");
+const { productSchema } = require("../validations/productValidation");
+
 
 function isValidObjectId(id) {
     return mongoose.Types.ObjectId.isValid(id);
@@ -40,33 +42,16 @@ async function buscarProdutoPorId(req, res, next) {
 }
 
 async function criarProduto(req, res, next) {
+
     try {
-        const { nome, preco, categoria, estoque } = req.body;
+        const resultado = productSchema.safeParse(req.body);
 
-        if (!nome || !preco || !categoria || estoque === undefined) {
+        if (!resultado.success) {
             return res.status(400).json({
-                erro: "Nome, preço, categoria e estoque são obrigatórios."
+                erro: resultado.error.issues[0].message
             });
         }
-
-        if (preco <= 0) {
-            return res.status(400).json({
-                erro: "O preço deve ser maior que zero."
-            });
-        }
-
-        if (estoque < 0) {
-            return res.status(400).json({
-                erro: "O estoque não pode ser negativo."
-            });
-        }
-
-        const novoProduto = await productService.criarProduto({
-            nome,
-            preco,
-            categoria,
-            estoque
-        });
+        const novoProduto = await productService.criarProduto(resultado.data)
 
         res.status(201).json(novoProduto);
     } catch (error) {
@@ -85,30 +70,15 @@ async function atualizarProduto(req, res, next) {
             });
         }
 
-        if (!nome || !preco || !categoria || estoque === undefined) {
+        const resultado = productSchema.safeParse(req.body);
+        if (!resultado.success) {
             return res.status(400).json({
-                erro: "Nome, preço, categoria e estoque são obrigatórios."
+                erro: resultado.error.issues[0].message
             });
         }
-
-        if (preco <= 0) {
-            return res.status(400).json({
-                erro: "O preço deve ser maior que zero."
-            });
-        }
-
-        if (estoque < 0) {
-            return res.status(400).json({
-                erro: "O estoque não pode ser negativo."
-            });
-        }
-
-        const produtoAtualizado = await productService.atualizarProduto(id, {
-            nome,
-            preco,
-            categoria,
-            estoque
-        });
+        const produtoAtualizado = await productService.atualizarProduto(
+            id,
+            resultado.data);
 
         if (!produtoAtualizado) {
             return res.status(404).json({
