@@ -15,6 +15,7 @@ const logger = require("./middlewares/loggerMiddleware");
 const errorHandler = require("./middlewares/errorMiddleware");
 
 const app = express();
+app.set("json spaces", 2);
 
 connectDatabase();
 

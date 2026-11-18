@@ -1,3 +1,4 @@
+
 const mongoose = require("mongoose");
 const productService = require("../services/productService");
 const { productSchema } = require("../validations/productValidation");
@@ -6,36 +7,35 @@ function isValidObjectId(id) {
     return mongoose.Types.ObjectId.isValid(id);
 }
 
+// LISTAR PRODUTOS
 async function listarProdutos(req, res, next) {
     try {
         const { categoria, search, page, limit } = req.query;
-      
-           if(page && Number(page) < 1) { 
-            return res.status(400).json({
-                erro: "A página deve ser maior ou igual a 1 "
-            });
-           }  
 
-           if(limit && Number(limit) < 1) { 
+        if (page && Number(page) < 1) {
             return res.status(400).json({
-                erro: "O limite de ser maior ou igual a 1"
+                erro: "A página deve ser maior ou igual a 1."
             });
-           }
+        }
 
-           if(limit && Number(limit)> 100) {
+        if (limit && Number(limit) < 1) {
             return res.status(400).json({
-                erro: " O limite máximo permitido é 100"
+                erro: "O limite deve ser maior ou igual a 1."
             });
-           }
+        }
 
-        const produtos = await productService.listarProdutos(
-            {
-                categoria,
-                search,
-                page,
-                limit
-            }
-        );
+        if (limit && Number(limit) > 100) {
+            return res.status(400).json({
+                erro: "O limite máximo permitido é 100."
+            });
+        }
+
+        const produtos = await productService.listarProdutos({
+            categoria,
+            search,
+            page,
+            limit
+        });
 
         res.json(produtos);
     } catch (error) {
@@ -43,6 +43,7 @@ async function listarProdutos(req, res, next) {
     }
 }
 
+// BUSCAR PRODUTO POR ID
 async function buscarProdutoPorId(req, res, next) {
     try {
         const { id } = req.params;
@@ -67,17 +68,21 @@ async function buscarProdutoPorId(req, res, next) {
     }
 }
 
+// CRIAR PRODUTO
 async function criarProduto(req, res, next) {
     try {
-
-        const resultado = productSchema.safeParse(req.body)
+        const resultado = productSchema.safeParse(req.body);
 
         if (!resultado.success) {
             return res.status(400).json({
-                erro: resultado.error.erros[0].message
+                erro: resultado.error.issues?.[0]?.message
+                    ?? "Dados inválidos."
             });
         }
-        const novoProduto = await productService.criarProduto(resultado.data);
+
+        const novoProduto = await productService.criarProduto(
+            resultado.data
+        );
 
         res.status(201).json(novoProduto);
     } catch (error) {
@@ -85,36 +90,45 @@ async function criarProduto(req, res, next) {
     }
 }
 
+// ATUALIZAR PRODUTO
 async function atualizarProduto(req, res, next) {
     try {
         const { id } = req.params;
-        const { nome, preco, categoria, estoque } = req.body;
 
         if (!isValidObjectId(id)) {
             return res.status(400).json({
                 erro: "ID inválido."
             });
         }
+
         const resultado = productSchema.safeParse(req.body);
 
         if (!resultado.success) {
             return res.status(400).json({
-                erro: resultado.error.erros[0].message
+                erro: resultado.error.issues?.[0]?.message
+                    ?? "Dados inválidos."
             });
         }
-        const produtoAtualizado = await productService.atualizarProduto(id, resultado.data);
+
+        const produtoAtualizado =
+            await productService.atualizarProduto(
+                id,
+                resultado.data
+            );
 
         if (!produtoAtualizado) {
             return res.status(404).json({
                 erro: "Produto não encontrado."
             });
         }
+
         res.json(produtoAtualizado);
     } catch (error) {
         next(error);
     }
 }
 
+// DELETAR PRODUTO
 async function deletarProduto(req, res, next) {
     try {
         const { id } = req.params;
@@ -125,7 +139,8 @@ async function deletarProduto(req, res, next) {
             });
         }
 
-        const produtoDeletado = await productService.deletarProduto(id);
+        const produtoDeletado =
+            await productService.deletarProduto(id);
 
         if (!produtoDeletado) {
             return res.status(404).json({

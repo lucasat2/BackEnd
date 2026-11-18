@@ -16,7 +16,7 @@ const {z} = require("zod");
     .min(1, "A categoria é obrigatória"),
 
     estoque: z
-    .string()
+    .number()
     .min(0,"O estoque não pode ser negativo."),
 
     
