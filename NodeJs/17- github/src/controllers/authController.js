@@ -45,7 +45,7 @@ async function login(req, res, next) {
       },
       process.env.JWT_SECRET,  // 123456
       {
-        expiresIn: "1d",  // 1 DIA
+        expiresIn: "30d",  // 1 DIA
       },
     );
 
